@@ -7,6 +7,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
+      REGION: ap-southeast-1
       REPOSITORY_URL: 285574919501.dkr.ecr.ap-southeast-1.amazonaws.com
       REPOSITORY_NAME: vinhdo_backend
       APP_IMAGE_NAME: $REPOSITORY_URL/$REPOSITORY_NAME
