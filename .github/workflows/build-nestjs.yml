@@ -39,7 +39,7 @@ jobs:
         run: aws ecr describe-repositories --repository-names $REPOSITORY_NAME || aws ecr create-repository --repository-name $REPOSITORY_NAME
 
       - name: Set repository lifecycle policy
-        run: aws ecr put-lifecycle-policy --repository-name $REPOSITORY_NAME --lifecycle-policy-text "./ecr-policy.json"
+        run: aws ecr put-lifecycle-policy --repository-name $REPOSITORY_NAME --lifecycle-policy-text "file://ecr-policy.json"
 
       - name: Build image from bundle
         run: docker build -t $APP_IMAGE_NAME:$APP_IMAGE_TAG --build-arg BASE_IMAGE=public.ecr.aws/docker/library/node:16.15-alpine -f ./Dockerfile .
