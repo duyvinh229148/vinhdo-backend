@@ -7,13 +7,13 @@ RUN chmod +x /tini
 
 # Install dependencies
 ## Copy production node modules
-COPY ./prod_node_modules ./node_modules
+COPY ./node_modules ./node_modules
 ## Copy package.json from build folder
-COPY ./dist/apps/organization-service/package.json package.json
+COPY package.json package.json
 ## Copy yarn.lock from current
-COPY ./yarn.lock yarn.lock
+#COPY ./yarn.lock yarn.lock
 
-COPY ./dist/apps/organization-service/ ./
+COPY ./ ./
 
 EXPOSE 8080
 
