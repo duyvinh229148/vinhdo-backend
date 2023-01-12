@@ -1,0 +1,47 @@
+{
+  "rules": [
+    {
+      "rulePriority": 1,
+      "description": "Keep images tagged master",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPrefixList": ["master"],
+        "countType": "imageCountMoreThan",
+        "countNumber": 5
+      },
+      "action": { "type": "expire" }
+    },
+    {
+      "rulePriority": 2,
+      "description": "Keep images tagged develop",
+      "selection": {
+        "tagStatus": "tagged",
+        "tagPrefixList": ["develop"],
+        "countType": "imageCountMoreThan",
+        "countNumber": 5
+      },
+      "action": { "type": "expire" }
+    },
+    {
+      "rulePriority": 3,
+      "description": "Remove untagged images",
+      "selection": {
+        "tagStatus": "untagged",
+        "countType": "sinceImagePushed",
+        "countUnit": "days",
+        "countNumber": 1
+      },
+      "action": { "type": "expire" }
+    },
+    {
+      "rulePriority": 4,
+      "description": "Keep last 10 images other than develop or master",
+      "selection": {
+        "tagStatus": "any",
+        "countType": "imageCountMoreThan",
+        "countNumber": 10
+      },
+      "action": { "type": "expire" }
+    }
+  ]
+}
