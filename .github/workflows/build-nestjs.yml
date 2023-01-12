@@ -10,7 +10,6 @@ jobs:
       REGION: ap-southeast-1
       REPOSITORY_URL: 285574919501.dkr.ecr.ap-southeast-1.amazonaws.com
       REPOSITORY_NAME: vinhdo_backend
-      APP_IMAGE_NAME: $REPOSITORY_URL/$REPOSITORY_NAME
 
     steps:
       - name: Configure AWS Credentials
@@ -42,7 +41,7 @@ jobs:
         run: aws ecr put-lifecycle-policy --repository-name $REPOSITORY_NAME --lifecycle-policy-text "file://ecr-policy.json"
 
       - name: Build image from bundle
-        run: docker build -t $APP_IMAGE_NAME:$APP_IMAGE_TAG --build-arg BASE_IMAGE=public.ecr.aws/docker/library/node:16.15-alpine -f ./Dockerfile .
+        run: docker build -t $REPOSITORY_URL/$REPOSITORY_NAME:latest --build-arg BASE_IMAGE=public.ecr.aws/docker/library/node:16.15-alpine -f ./Dockerfile .
 
       - name: Push image to ECR
-        run: docker push "${APP_IMAGE_NAME}:aaa"
+        run: docker push $REPOSITORY_URL/$REPOSITORY_NAME:latest
