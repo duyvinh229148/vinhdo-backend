@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: vinhdo-backend
+build:
+  artifacts:
+  - image: dockerfile-image
+    docker:
+      dockerfile: Dockerfile
+    sync:
+      manual:
+        - src: 'dist/*.js'
+          dest: '.'
+        - src: 'dist/*.js.map'
+          dest: '.'
+        - src: 'dist/*.*'
+          dest: '.'
+deploy:
+  helm:
+    releases:
+      - name: todo-service
+        namespace: vinhdo
+        chartPath: ./charts/application
+        skipBuildDependencies: true
+

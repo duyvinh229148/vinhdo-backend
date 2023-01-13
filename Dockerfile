@@ -1,21 +1,20 @@
-FROM public.ecr.aws/docker/library/node:16.15-slim
+# Base image
+FROM node:18
 
-WORKDIR /usr/app
-ENV TINI_VERSION v0.19.0
-ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-RUN chmod +x /tini
+# Create app directory
+WORKDIR /usr/src/app
 
-# Install dependencies
-## Copy production node modules
-COPY ./node_modules ./node_modules
-## Copy package.json from build folder
-COPY package.json package.json
-## Copy yarn.lock from current
-#COPY ./yarn.lock yarn.lock
+# A wildcard is used to ensure both package.json AND package-lock.json are copied
+COPY package*.json ./
 
-COPY ./ ./
+# Install app dependencies
+RUN npm install
 
-EXPOSE 8080
+# Bundle app source
+COPY . .
 
-ENTRYPOINT [ "/tini", "--" ]
-CMD node main.js
+# Creates a "dist" folder with the production build
+RUN npm run build
+
+# Start the server using the production build
+CMD [ "node", "dist/main.js" ]

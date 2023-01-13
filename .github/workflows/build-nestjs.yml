@@ -22,14 +22,14 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: Setup node 18
-        uses: actions/setup-node@v3
-        with:
-          node-version: 18
-          cache: 'npm'
+#      - name: Setup node 18
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version: 18
+#          cache: 'npm'
 
-      - run: npm ci
-      - run: npm run build
+#      - run: npm ci
+#      - run: npm run build
 
       - name: Login ECR
         run: aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPOSITORY_URL
@@ -41,7 +41,7 @@ jobs:
         run: aws ecr put-lifecycle-policy --repository-name $REPOSITORY_NAME --lifecycle-policy-text "file://ecr-policy.json"
 
       - name: Build image from bundle
-        run: docker build -t $REPOSITORY_URL/$REPOSITORY_NAME:latest --build-arg BASE_IMAGE=public.ecr.aws/docker/library/node:16.15-alpine -f ./Dockerfile .
+        run: docker build -t $REPOSITORY_URL/$REPOSITORY_NAME:latest -f ./Dockerfile .
 
       - name: Push image to ECR
         run: docker push $REPOSITORY_URL/$REPOSITORY_NAME:latest
