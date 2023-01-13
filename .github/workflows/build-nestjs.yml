@@ -22,15 +22,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-#      - name: Setup node 18
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version: 18
-#          cache: 'npm'
-
-#      - run: npm ci
-#      - run: npm run build
-
       - name: Login ECR
         run: aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPOSITORY_URL
 

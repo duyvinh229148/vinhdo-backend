@@ -1,12 +1,12 @@
 apiVersion: skaffold/v4beta1
 kind: Config
 metadata:
-  name: vinhdo-backend
+  name: todo-service
 build:
   artifacts:
-  - image: dockerfile-image
+  - image: my-skaffold-artifact-image
     docker:
-      dockerfile: Dockerfile
+      dockerfile: k8s/local.Dockerfile
     sync:
       manual:
         - src: 'dist/*.js'
@@ -22,4 +22,9 @@ deploy:
         namespace: vinhdo
         chartPath: ./charts/application
         skipBuildDependencies: true
+        setValueTemplates:
+          image.repository: my-skaffold-artifact-image
+          image.tag: latest
+        setValues:
+          image.pullPolicy: "IfNotPresent"
 
