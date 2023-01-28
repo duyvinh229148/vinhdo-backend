@@ -1,0 +1,18 @@
+secrets:
+  organization-service-database:
+    stringData:
+      DB_CONNECTION_STRING: postgresql://postgres:yourrentals2021@postgresql.core.svc.cluster.local:5432/core
+
+application:
+  livenessProbe: null
+  readinessProbe: null
+  env:
+    JWT_ISSUER: "organization-service.local.your.rentals"
+    ALLOW_TIME_TRAVEL: "true"
+    EMAIL_VARS_ORGANIZATION_MANAGEMENT_PAGE: "goto.your.rentals/organisation/management"
+    ALLOW_SWAGGER: "true"
+
+virtualServices:
+  ingress:
+    hosts:
+      - api-internal-v2-local.your.rentals

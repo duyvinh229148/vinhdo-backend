@@ -1,0 +1,37 @@
+application:
+  resources:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      memory: 500Mi
+  env:
+    JWT_ISSUER: "organization-service.development.your.rentals"
+    EMAIL_VARS_ORGANIZATION_MANAGEMENT_PAGE: "goto.your.rentals/organisation/management"
+    ALLOW_TIME_TRAVEL: "true"
+    ALLOW_SWAGGER: "true"
+
+externalSecrets:
+  organization-service-database:
+    secretStoreRef:
+      name: core
+    secretData:
+      DB_CONNECTION_STRING: "{{ .DB_CONNECTION_STRING }}"
+    remoteData:
+      - secretKey: DB_CONNECTION_STRING
+        remoteKey: "/yr-backend/development/app/organization-service/database/connection-string"
+  organization-service-signing-keys:
+    secretStoreRef:
+      name: core
+    secretData:
+      secrets_0_kid: '{{ (index (fromJson .keys) 0).kid }}'
+      secrets_0_private: '{{ (index (fromJson .keys) 0).private }}'
+      secrets_0_public: '{{ (index (fromJson .keys) 0).public }}'
+    remoteData:
+      - secretKey: keys
+        remoteKey: "/yr-backend/development/app/organization-service/authentication/signing-keys"
+
+virtualServices:
+  ingress:
+    hosts:
+      - api-internal-v2-dev.your.rentals

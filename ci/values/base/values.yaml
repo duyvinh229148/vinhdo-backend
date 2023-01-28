@@ -1,0 +1,69 @@
+application:
+  metadata:
+    labels:
+      app.kubernetes.io/app: organization-service
+    annotations:
+      autoscaling.knative.dev/minScale: '1'
+  port: 8080
+  env:
+    OTEL_RESOURCE_ATTRIBUTES: 'service.name={{ .Release.Name }}'
+    SIGNING_KEY_WATCH_DIR: /usr/app/secrets/signing-keys
+    LEGACY_SIGNING_KEY_WATCH_DIR: /usr/app/secrets/legacy-signing-keys
+    OTEL_PROPAGATOR_HEADER_BASED_HEADERS: 'x-forwarded-for;x-request-id;user-agent;deviceid'
+  envFrom:
+    - configMapRef:
+        name: common-app
+    - secretRef:
+        name: organization-service-database
+    - secretRef:
+        name: common-redis
+  volumeMounts:
+    - name: organization-service-signing-keys
+      mountPath: /usr/app/secrets/signing-keys
+      readOnly: true
+    - name: common-legacy-signing-keys
+      mountPath: /usr/app/secrets/legacy-signing-keys
+      readOnly: true
+  volumes:
+    - name: organization-service-signing-keys
+      secret:
+        secretName: organization-service-signing-keys
+    - name: common-legacy-signing-keys
+      secret:
+        secretName: common-legacy-signing-keys
+
+
+virtualServices:
+  ingress:
+    hosts:
+      - api-internal-v2.your.rentals
+    gateways:
+      - istio-ingress/istio-ingress-gateway
+      - knative-serving/knative-ingress-gateway
+    http:
+      - match:
+        - uri:
+            prefix: "/organization-management/"
+        - uri:
+            prefix: "/organization-management"
+        rewrite:
+          uri: "/"
+        corsPolicy:
+          allowOrigins:
+            - exact: http://localhost:8094
+            - exact: http://localhost:8080
+            - exact: https://goto.your.rentals
+            - exact: https://app.your.rentals
+            - exact: https://inside-test.your.rentals
+            - exact: https://inside.your.rentals
+          allowMethods:
+            - POST
+            - GET
+            - PUT
+            - PATCH
+            - DELETE
+            - OPTIONS
+          allowCredentials: true
+          allowHeaders:
+            - "*"
+          maxAge: "24h"
