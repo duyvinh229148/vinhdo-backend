@@ -28,8 +28,7 @@ deploy:
         setValueTemplates:
           image.repository: "{{.IMAGE_REPO_my_first_image}}"
           image.tag: "{{.IMAGE_TAG_my_first_image}}"
-        setValues:
-          image.pullPolicy: "IfNotPresent"
+          service.port: 8080
         valuesFiles:
           - ./ci/values/base/values.yaml
           - ./ci/values/overlay/local/values.yaml

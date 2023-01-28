@@ -1,5 +1,5 @@
 # Base image
-FROM node:18
+FROM node:18-slim
 
 # Create app directory
 WORKDIR /usr/src/app
@@ -16,7 +16,7 @@ COPY . .
 # Creates a "dist" folder with the production build
 RUN npm run build
 
-EXPOSE 3000
+EXPOSE 8080
 
 # Start the server using the production build
 CMD [ "node", "dist/main.js" ]

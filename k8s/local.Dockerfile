@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/node:16.15-slim
+FROM public.ecr.aws/docker/library/node:18-slim
 
 WORKDIR /usr/app
 ENV TINI_VERSION v0.19.0
